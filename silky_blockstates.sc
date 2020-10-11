@@ -128,8 +128,7 @@ if(player ~ 'sneaking' && _holds_enchant(player, 'silk_touch'),
         );
         if(!_match_any(block, global_preserve_block_data_blacklist) && !container_size,
             _preserve_block_data(player, block, blockdata);
-        );
-        print(inventory_size(block))
+        )
     ))
 );
 
