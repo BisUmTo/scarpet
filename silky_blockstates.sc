@@ -11,8 +11,8 @@ __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
 global_drop_in_creative = true;
 global_create_item_whitelist = ['^spawner$', '^cake$'];
-global_preserve_block_state_blacklist = ['_bed$', '_door$', '^sticky_piston$', '^piston$', '^bee_nest$', '^beehive$'];
-global_preserve_block_data_blacklist = ['^bee_nest$', '^beehive$', '^campfire$', '^soul_campfire$', '^lectern$', '^jukebox$', '_banner$', '^player_head$'];
+global_preserve_block_state_blacklist = ['_bed$', '_door$', '^sticky_piston$', '^piston$', '^bee_nest$', '^beehive$', '^redstone_wire$'];
+global_preserve_block_data_blacklist = ['^bee_nest$', '^beehive$', '^campfire$', '^soul_campfire$', '^lectern$', '^jukebox$', '_banner$', '^player_head$', '_bed$'];
 
 // returns a map with all block_properties of the block and the relative value
 block_state(block) -> (
@@ -34,10 +34,11 @@ replaceable(block) ->(
 );
 
 // adds string as new Lore line to the dropped-item with the given uuid
-_add_item_lore(uuid, string) -> (
-    run(str('data modify entity %s Item.tag.display.Lore append value \'{"text":"%s","color":"gray"}\'',
+_add_item_lore(uuid, string, color) -> (
+    run(str('data modify entity %s Item.tag.display.Lore append value \'{"text":"%s","color":"%s"}\'',
         uuid,
-        replace(escape_string(escape_string(string,'"'),'\''),'\\\\\\\\u00a7','\\u00a7')
+        replace(escape_string(escape_string(string,'"'),'\''),'\\\\\\\\u00a7','\\u00a7'),
+        color
     ));
 );
 
@@ -77,7 +78,8 @@ _preserve_block_state(player, block) -> (
     );
     modify(item:0, 'nbt_merge', str('{Item:{tag:{BlockStateTag:%s}}}', encode_blockstate));
     uuid = item:0 ~ 'command_name';
-    for(blockstate, _add_item_lore(uuid, _formatted_property(_, blockstate:_)))
+    //_add_item_lore(uuid, '\\u00a7lBlockStateTag:\\u00a7r', 'gray');
+    for(blockstate, _add_item_lore(uuid, _formatted_property(_, blockstate:_), 'gray'))
 );
 
 // merges the block's blockdata into the dropped-item spawned
@@ -92,9 +94,9 @@ _preserve_block_data(player, block, blockdata) -> (
     );
     modify(item:0, 'nbt_merge', str('{Item:{tag:{BlockEntityTag:%s}}}', blockdata));
     uuid = item:0 ~ 'command_name';
-    
+    //_add_item_lore(uuid, '\\u00a7lBlockEntityTag:\\u00a7r', 'gray');
     c_for(i = 0, i < length(blockdata), i += 50,
-        _add_item_lore(uuid, slice(blockdata, i, i + 50))
+        _add_item_lore(uuid, slice(blockdata, i, i + 50), 'dark_gray')
     )
 );
 
@@ -114,37 +116,39 @@ _match_any(string, list) -> (
     false
 );
 
+// inject into the dropped-item the custom nbt
 __on_player_breaks_block(player, block) ->
 if(player ~ 'sneaking' && _holds_enchant(player, 'silk_touch'),
     blockdata = block_data(block);
-    schedule(0, _(outer(player), outer(block), outer(blockdata)) -> (
+    container_size = inventory_size(block);
+    // wait for the dropped-item to spawn
+    schedule(0, _(outer(player), outer(block), outer(blockdata), outer(container_size)) -> (
         if(!_match_any(block, global_preserve_block_state_blacklist),
             _preserve_block_state(player, block);
         );
-        if(!_match_any(block, global_preserve_block_data_blacklist) && !inventory_size,
+        if(!_match_any(block, global_preserve_block_data_blacklist) && !container_size,
             _preserve_block_data(player, block, blockdata);
         );
+        print(inventory_size(block))
     ))
 );
 
-__on_player_right_clicks_block (player, item_tuple, hand, block, face, hitvec) -> (
-    g = player ~ 'gamemode';
-    if(g == 'spectator' || !item_tuple, return());
+// fixes the BlockEntityTag for deopped players and the wall_ version of blocks
+__on_player_places_block(player, item_tuple, hand, block) -> (
     [item, count, nbt] = item_tuple;
-    if(!nbt || (g == 'adventure' && !nbt:'CanPlaceOn' ~ '"minecraft:' + block + '"'), return());
-    if(_match_any(item, global_preserve_block_state_blacklist), return());
-    data = nbt:'BlockEntityTag{}';
-    blockstate = nbt:'BlockStateTag{}';
-    blockstate = if(blockstate, slice(replace(blockstate, ':', '='), 1, length(blockstate) - 1), '');
+    if(!nbt, return());
+    // if not in blacklist, get the blockstate from item's nbt and format it correctly
+    blockstate = if(_match_any(item, global_preserve_block_state_blacklist), null, nbt:'BlockStateTag{}');
+    blockstate = if(blockstate, '[' + slice(replace(blockstate, ':', '='), 1, length(blockstate) - 1) + ']', '');
+    // handles the wall_ version of the block
     block_id = if(blockstate ~ ',?wall="true"' != null, 
-        blockstate = replace(blockstate, ',?wall="true"', ''); 
-        replace(item,'_(?=[^_]+$)','_wall_'), 
+        blockstate = replace(blockstate, ',?wall="true"', '');
+        replace(item,'(^|_)(?=[^_]+$)','$1wall_'),
         item
     );
-    b = if(replaceable(block), block, block(pos_offset(block, face)));
-    if(!replaceable(b), return());
-    if(!set(b, block_id + '[' + blockstate + ']' + if(data, data, '')), return());
-    if(g == 'creative', return()); 
-    inventory_set(player, if(hand == 'mainhand', player ~ 'selected_slot', -1), count - 1, item, nbt)
-);
-
+    // if not in blacklist, get the data from item's nbt and format it correctly
+    data = if(_match_any(item, global_preserve_block_data_blacklist), null, nbt:'BlockEntityTag{}');
+    data = if(data, data, '');
+    // sets the block with correct blockstate and data
+    set(block, block_id + blockstate + data)
+)
