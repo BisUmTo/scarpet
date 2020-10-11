@@ -11,7 +11,7 @@ __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
 global_drop_in_creative = true;
 global_create_item_whitelist = ['^spawner$', '^cake$'];
-global_preserve_block_state_blacklist = ['_bed$', '_door$', '^sticky_piston$', '^piston$', '^bee_nest$', '^beehive$', '^redstone_wire$'];
+global_preserve_block_state_blacklist = ['_bed$', '_door$', '^sticky_piston$', '^piston$', '^bee_nest$', '_banner$', '^beehive$', '^redstone_wire$'];
 global_preserve_block_data_blacklist = ['^bee_nest$', '^beehive$', '^campfire$', '^soul_campfire$', '^lectern$', '^jukebox$', '_banner$', '^player_head$', '_bed$'];
 
 // returns a map with all block_properties of the block and the relative value
@@ -135,9 +135,9 @@ if(player ~ 'sneaking' && _holds_enchant(player, 'silk_touch'),
 // fixes the BlockEntityTag for deopped players and the wall_ version of blocks
 __on_player_places_block(player, item_tuple, hand, block) -> (
     [item, count, nbt] = item_tuple;
-    if(!nbt, return());
+    if(!nbt || (!nbt:'BlockStateTag{}' && !nbt:'BlockEntityTag{}'), return());
     // if not in blacklist, get the blockstate from item's nbt and format it correctly
-    blockstate = if(_match_any(item, global_preserve_block_state_blacklist), null, nbt:'BlockStateTag{}');
+    blockstate = if(_match_any(item, global_preserve_block_state_blacklist), encode_nbt(block_state(block)), nbt:'BlockStateTag{}');
     blockstate = if(blockstate, '[' + slice(replace(blockstate, ':', '='), 1, length(blockstate) - 1) + ']', '');
     // handles the wall_ version of the block
     block_id = if(blockstate ~ ',?wall="true"' != null, 
@@ -146,7 +146,7 @@ __on_player_places_block(player, item_tuple, hand, block) -> (
         item
     );
     // if not in blacklist, get the data from item's nbt and format it correctly
-    data = if(_match_any(item, global_preserve_block_data_blacklist), null, nbt:'BlockEntityTag{}');
+    data = if(_match_any(item, global_preserve_block_data_blacklist), block_data(block), nbt:'BlockEntityTag{}');
     data = if(data, data, '');
     // sets the block with correct blockstate and data
     set(block, block_id + blockstate + data)
