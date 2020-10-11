@@ -136,10 +136,15 @@ __on_player_right_clicks_block (player, item_tuple, hand, block, face, hitvec) -
     data = nbt:'BlockEntityTag{}';
     blockstate = nbt:'BlockStateTag{}';
     blockstate = if(blockstate, slice(replace(blockstate, ':', '='), 1, length(blockstate) - 1), '');
-    block_id = if(blockstate = replace(blockstate, ',?wall="true"', ''), replace(item,'_(?=[^_]+$)','_wall_'), item);
+    block_id = if(blockstate ~ ',?wall="true"' != null, 
+        blockstate = replace(blockstate, ',?wall="true"', ''); 
+        replace(item,'_(?=[^_]+$)','_wall_'), 
+        item
+    );
     b = if(replaceable(block), block, block(pos_offset(block, face)));
     if(!replaceable(b), return());
     if(!set(b, block_id + '[' + blockstate + ']' + if(data, data, '')), return());
     if(g == 'creative', return()); 
     inventory_set(player, if(hand == 'mainhand', player ~ 'selected_slot', -1), count - 1, item, nbt)
 );
+
