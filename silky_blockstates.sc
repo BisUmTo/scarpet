@@ -143,7 +143,6 @@ if(player ~ 'sneaking' && _holds_enchant(player, 'silk_touch'),
 // fixes the BlockEntityTag for deopped players and the wall_ version of blocks
 __on_player_places_block(player, item_tuple, hand, block) -> 
 if(__need_forced_placement(item_tuple),
-    print('forced');
     [item, count, nbt] = item_tuple;
     if(!nbt || (!nbt:'BlockStateTag{}' && !nbt:'BlockEntityTag{}'), return());
     // if not in blacklist, get the blockstate from item's nbt and format it correctly
