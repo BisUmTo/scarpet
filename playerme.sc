@@ -6,7 +6,7 @@ __config() -> {
     'commands' -> {
         'attack' ->                     _() ->   _player('attack'),
         'attack continuous' ->          _() ->   _player('attack continuous'),
-        'attack interval <ticks>' ->    _(tk) -> _player('attack continuous ' + tk),
+        'attack interval <ticks>' ->    _(tk) -> _player('attack interval ' + tk),
         'attack once' ->                _() ->   _player('attack once'),
         'dismount' ->                   _() ->   _player('dismount'),
         'drop' ->                       _() ->   _player('drop'),
