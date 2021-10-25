@@ -1,3 +1,8 @@
+//////
+// colorableshulkers by BisUmTo
+// Right click on a shulker with a dye to color it
+//////
+
 __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
 global_colorants = ['white_dye', 'orange_dye', 'magenta_dye', 'light_blue_dye', 'yellow_dye', 'lime_dye', 'pink_dye', 'gray_dye', 'light_gray_dye', 'cyan_dye', 'purple_dye', 'blue_dye', 'brown_dye', 'green_dye', 'red_dye', 'black_dye', 'popped_chorus_fruit'];
