@@ -1,3 +1,8 @@
+//////
+// floatingladders by BisUmTo
+// Right click on ladder with a ladder to place a new ladder under the clicked ladder
+//////
+
 __config() -> {'scope'->'global','stay_loaded'->true};
 
 _rope_ladders(player, item_tuple, hand, block, face) -> (
