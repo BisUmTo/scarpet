@@ -1,3 +1,8 @@
+//////
+// dragoneggrespawns by BisUmTo
+// Each ender_dragon will spawn dragon_egg on death
+//////
+
 __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
 _drop_egg_on_death(e, new) -> entity_event(e, 'on_removed', _(entity) -> spawn_egg());
