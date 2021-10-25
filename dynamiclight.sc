@@ -1,3 +1,7 @@
+//////
+// dynamiclight by BisUmTo
+// Holding a luminous block, will light up the area around the player
+//////
 
 global_lights = {
     'beacon' -> 15,
