@@ -1,6 +1,9 @@
-__config() -> {
-    'stay_loaded' -> true,
-    'scope' -> 'global'};
+//////
+// crumbleconcrete by BisUmTo & DukeEdivad05
+// Right click on a concrete block with a glass_bottle to crumble it into concrete powder
+//////
+
+__config() -> {'stay_loaded' -> true,'scope' -> 'global'};
 
 __on_player_right_clicks_block(player, item_tuple, hand, block, face, hitvec) -> (
     if(player ~ 'gamemode' == 'spectator' || !item_tuple || !block ~ '_concrete$', return());
