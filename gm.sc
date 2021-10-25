@@ -1,3 +1,11 @@
+//////
+// gm by BisUmTo
+// Added "/gm c" command to change gamemode to creative mode
+// Added "/gm s" command to change gamemode to survival mode
+// Added "/gm sp" command to change gamemode to spectator mode
+// Added "/gm a" command to change gamemode to adventure mode
+//////
+
 __config() -> {'scope'->'global','stay_loaded'->true};
 __command() -> '';
 
