@@ -43,12 +43,8 @@ _store_waystone(player, nbt) -> (
 );
 
 _add_trade(player, villager, trade) -> (
-    if(trades = villager~'nbt':'Offers.Recipes',
-        trades = slice(str(trades),0,length(trades)-1)+','+str(trade)+']',
-        trades = nbt('['+str(trade)+']')
-    );
-    nbt_merge = nbt('{}');
-    nbt_merge:'Offers.Recipes' = nbt(trades);
+    nbt_merge = villager~'nbt';
+    put(nbt_merge,'Offers.Recipes',trade,-1);
     modify(villager,'nbt_merge',nbt_merge);
     print(player,format('l Selected item has been memorized by the villager.'));
     sound('block.respawn_anchor.charge', pos(villager), 1, 2, 'neutral')

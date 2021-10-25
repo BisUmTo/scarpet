@@ -18,7 +18,7 @@ bossbar('redcraft:timebar');
 bossbar('redcraft:timebar', 'max', 24000);
 bossbar('redcraft:timebar', 'visible', true);
 
-_date(tick) -> str('%dg %02d:%02d:%02d',
+_date(tick) -> str('%dd %02d:%02d:%02d',
     floor(tick/1728000),
     floor(tick%1728000/72000),
     floor(tick%72000/1200),
@@ -27,7 +27,7 @@ _date(tick) -> str('%dg %02d:%02d:%02d',
 
 fast_looper() -> (
     d = day_time()%24000;
-    w = world_time();
+    w = system_info('world_time');
     n = d>12540 && d <= 23458;
     bossbar('redcraft:timebar','name',_date(w));
     bossbar('redcraft:timebar','value',d);

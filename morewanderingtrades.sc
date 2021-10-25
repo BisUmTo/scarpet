@@ -23,12 +23,8 @@ _encode_base64(s) -> (
 
 _new_trade(buy_left,buy_right,result) -> nbt(str('{maxUses:1,xp:50,rewardExp:1b,buy:{id:"minecraft:%s",Count:%db},buyB:{id:"minecraft:%s",Count:%db},sell:{id:"minecraft:%s",Count:%db}}',buy_left:0,buy_left:1,buy_right:0,buy_right:1,result:0,result:1));
 _add_trade(villager, trade) -> (
-    if(trades = villager~'nbt':'Offers.Recipes',
-        trades = slice(str(trades),0,length(trades)-1)+','+str(trade)+']',
-        trades = nbt('['+str(trade)+']')
-    );
-    nbt_merge = nbt('{}');
-    nbt_merge:'Offers.Recipes' = nbt(trades);
+    nbt_merge = villager~'nbt';
+    put(nbt_merge,'Offers.Recipes',trade,-1);
     modify(villager,'nbt_merge',nbt_merge);
 );
 
