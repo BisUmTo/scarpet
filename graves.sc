@@ -1,3 +1,12 @@
+//////
+// graves by BisUmTo
+// On player death, if items are on the ground, it will generate a tombstone with item inside of it
+// Sneaking on one's tombstone, will release all items
+// Added "/graves" command to manually remove a grave (no ownership is verified, ops only)
+// Added "/graves list" command to print a list with all tobstone cordinates of the executor
+// Added "/graves list <player>" command to print a list with all tobstone cordinates of the given player (ops only)
+//////
+
 __config() -> {
     'stay_loaded' -> true,
     'scope' -> 'global',
@@ -40,7 +49,11 @@ _graves_list(player_name) -> (
 scoreboard_add('gb.grave.time');
 
 __on_player_dies(player) -> (
-	if(inventory_has_items(player),
+    nbt = parse_nbt(nbt_storage('redcraft:players'));
+    if(put(nbt, player~'uuid', player~'name') != null,
+        nbt_storage('redcraft:players', encode_nbt(nbt))
+    );
+    if(inventory_has_items(player),
         schedule(0, _(outer(player)) -> if(
             (items = filter(entity_area('item', (pos=pos(player)) + [0,player~'eye_height',0], [3, 3, 3]), _~'age'==0)) != [],
             _make_grave(player, pos, items)
