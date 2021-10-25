@@ -1,3 +1,10 @@
+//////
+// betteritemframes by BisUmTo
+// Right click on an item_frame/glow_item_frame with a phantom_membrane to make it invisible
+// Richt click on an item_frame/glow_item_frame with a glass_pane to make it fixed
+// Right click on an item_frame/glow_item_frame with an axe to unfix it
+//////
+
 __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
 __on_player_interacts_with_entity(player, entity, hand) -> (
