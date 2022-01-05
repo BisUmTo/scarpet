@@ -13,7 +13,9 @@ global_lights = {
     'lantern' -> 15,
     'sea_lantern' -> 15,
     'shroomlight' -> 15,
-    'emdrod' -> 14,
+    'end_rod' -> 14,
+    'blaze_rod' -> 14,
+    'blaze_powder' -> 14,
     'glow_berries' -> 14,
     'torch' -> 14,
     'soul_campfire' -> 10,
@@ -31,16 +33,19 @@ global_lights = {
     'brown_mushroom' -> 1,
     'dragon_egg' -> 1,
     'end_portal_frame' -> 1,
-    'sculk_sensor' -> 1
+    'sculk_sensor' -> 1,
+    'enchanting_table' -> 7
 };
 
 __on_tick() -> (
     _remove_lights();
     for(player('all'),
         p = _;
+        if (p~'gamemode' == 'spectator', return());
         hold_mainhand = p ~ 'holds' || [null,null,null];
         hold_offhand = p ~ ['holds', 'offhand'] || [null,null,null];
-        light = max(global_lights:(hold_mainhand:0), global_lights:(hold_offhand:0));
+        hold_head = p ~ ['holds', 'head'] || [null,null,null];
+        light = max(global_lights:(hold_mainhand:0), global_lights:(hold_offhand:0), global_lights:(hold_head:0));
         if(light,
             _set_lights(pos(p)+[0,p~'eye_height',0], light)
         )
@@ -50,7 +55,7 @@ __on_tick() -> (
 _remove_lights() -> for(entity_list('marker'),
     if(_ ~ ['has_scoreboard_tag', 'gb.light_block'],
         block = block(pos(_));
-        set(pos(_), if(liquid(block), 'water', 'air'));
+        without_updates(set(pos(_), if(liquid(block), 'water', 'air')));
         modify(_, 'remove')
     )
 );
@@ -63,14 +68,12 @@ _set_lights(pos, level) -> (
 );
 
 _set_light(pos, level) -> (
-    without_updates(
-        if(air(pos), 
-            set(pos, 'light', 'level', level),
-        block(pos) == 'water', // elif
-            set(pos, 'light', 'level', level, 'waterlogged', 'true'),
-        // else
-            return()
-        );
-        modify(spawn('marker', pos), 'tag', 'gb.light_block')
-    )
+    if(air(pos),
+        without_updates(set(pos, 'light', 'level', level)),
+    block(pos) == 'water[level=0]', // elif
+        without_updates(set(pos, 'light', 'level', level, 'waterlogged', 'true')),
+    // else
+        return()
+    );
+    modify(spawn('marker', pos), 'tag', 'gb.light_block')
 )

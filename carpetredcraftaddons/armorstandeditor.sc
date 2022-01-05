@@ -309,11 +309,12 @@ _put_on_head(player, entity) -> (
 _special_actions(item, count, entity) -> (
  if(item == 'stick' && count >= 2 && !entity ~ 'nbt' : 'ShowArms',
         modify(entity, 'nbt_merge', '{ShowArms:true}');
-        remove_count = 2;
+        global_remove_count = 2;
     , item == 'smooth_stone_slab' && !entity ~ 'nbt' : 'NoBasePlate',
         modify(entity, 'nbt_merge', '{NoBasePlate:true}')
     , item == 'feather' && entity ~ 'gravity',
         modify(entity, 'tag', 'gb.armorstandeditor.nogravity.1');
+        modify(entity, 'tag', 'gb.NoGravity');
         modify(entity, 'gravity', false)
     , item == 'phantom_membrane' && !entity ~ 'nbt' : 'Invisible',
         modify(entity, 'tag', 'gb.Invisible');
@@ -376,12 +377,12 @@ if(hand == 'mainhand' && _edit_mode(entity),
         item_tuple = player ~ 'holds';
         if(player ~ 'sneaking' && item_tuple,
             [item, count, nbt] = item_tuple;
-            remove_count = 1;
+            global_remove_count = 1;
             if(_special_actions(item, count, entity),
                 modify(player, 'swing', hand);
                 sound('minecraft:item.dye.use', pos(entity), 1.0, 1, 'neutral');
                 if(player ~ 'gamemode' != 'creative',
-                    inventory_set(player, if(hand == 'mainhand', player ~ 'selected_slot', -1), count - remove_count, item, nbt)
+                    inventory_set(player, if(hand == 'mainhand', player ~ 'selected_slot', -1), count - global_remove_count, item, nbt)
                 );
                 return()
             )
