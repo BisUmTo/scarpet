@@ -1,3 +1,10 @@
+//////
+// debug_stick by DukeEdivad05 & BisUmTo
+// Allows to use debug_stick in survival too
+// Left click to change selected property
+// Right click to cycle the states
+//////
+
 __config() -> {
     'stay_loaded' -> true,
     'resources' -> {
