@@ -80,4 +80,30 @@ __on_player_right_clicks_block(player, item_tuple, hand, block, face, hitvec) ->
             display_title(player, 'actionbar', str('"%s" has no properties', block_name));
         )
     )
+);
+
+create_datapack(system_info('app_name'), {
+    'data' -> { 'scarpet' -> { 'recipes' -> { str('%s.json', system_info('app_name')) -> {
+        'type' -> 'crafting_shaped',
+        'pattern' -> [
+            ' N',
+            'S '
+        ],
+        'key' -> {
+            'S' -> {
+                'item' -> 'minecraft:stick'
+            },
+            'N' -> {
+                'item' -> 'minecraft:nether_star'
+            }
+        },
+        'result' -> {
+            'item' -> 'minecraft:debug_stick',
+            'count' -> 1
+        }
+    } } } }
+});
+
+__on_close()-> (
+    run('datapack disable "file/debug_stick.zip"')
 )
