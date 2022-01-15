@@ -7,10 +7,12 @@
 
 __config() -> {
     'stay_loaded' -> true,
-    'resources' -> {
-         'source' -> 'https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
-         'target' -> system_info('app_name')+'.data/data.json',
-     }
+    'resources' -> [
+        {
+            'source' -> 'https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
+            'target' -> system_info('app_name')+'.data/data.json',
+        }
+    ]
 };
 
 global_properties = read_file('data','json');
