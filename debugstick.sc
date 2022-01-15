@@ -10,7 +10,7 @@ __config() -> {
     'resources' -> [
         {
             'source' -> 'https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
-            'target' -> system_info('app_name')+'.data/data.json',
+            'target' -> 'data.json',
         }
     ]
 };
