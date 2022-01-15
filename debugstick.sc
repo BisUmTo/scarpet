@@ -18,20 +18,20 @@ __config() -> {
 global_properties = read_file('data','json');
 global_blacklist_states = ['waterlogged'];
 
-_cycle(list, current, inverse) -> (
+for(global_properties,
+    block = _;
     for(global_blacklist_states,
-        state = _;
-        if((list ~ state) != null,
-            delete(list, list ~ state)
-        )
-    );
+        delete(global_properties:block:'properties', _)
+    )
+);
+
+_cycle(list, current, inverse) -> (
     index = list~current;
     i = -1^(inverse+1);
     if(current, list:(index+i), list:0)
 );
 
 __on_player_clicks_block(player, block, face) -> (
-
     item_tuple = player ~ ['holds',hand='mainhand'] || player ~ ['holds',hand='offhand'] || [null];
     if(item_tuple:0 == 'debug_stick' && player ~ 'gamemode' == 'survival' && tick_time() > global_last_click,
 
@@ -46,7 +46,7 @@ __on_player_clicks_block(player, block, face) -> (
             property = _cycle(properties, current, player~'sneaking');
             compound:block_name = property;
             nbt:'DebugProperty' = compound;
-            display_title(player, 'actionbar', str('selected "%s" (%s)', current, block_state(block, current)));
+            display_title(player, 'actionbar', str('selected "%s" (%s)', property, block_state(block, property)));
             inventory_set(player, if(hand=='mainhand',player~'selected_slot',-1), item_tuple:1, item_tuple:0, encode_nbt(nbt));
         , // else
             display_title(player, 'actionbar', str('"%s" has no properties', block_name));
