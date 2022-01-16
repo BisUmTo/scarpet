@@ -1,4 +1,4 @@
-__config() -> {'scope'->'global','stay_loaded'->true};
+__config() -> {'scope'->'global'};
 
 __on_player_clicks_block(player, block, face) -> (
     g = player ~ 'gamemode';
@@ -54,3 +54,41 @@ _looper() -> (
     schedule(40, '_looper')
 );
 _looper();
+
+global_app_name = system_info('app_name');
+create_datapack(global_app_name, {
+    'data' -> { global_app_name -> { 
+        'tags' -> { 'items' -> { 'light_blocks.json' -> {
+            'replace' -> true,
+            'values' -> [
+                'minecraft:glowstone',
+                'minecraft:redstone_lamp',
+                'minecraft:jack_o_lantern',
+                'minecraft:sea_lantern',
+                'minecraft:shroomlight'
+            ]
+        } } },
+        'recipes' -> { 'light.json' -> {
+            'type' -> 'minecraft:crafting_shapeless',
+            'ingredients' -> [
+                {'item' -> 'minecraft:phantom_membrane'},
+                {'tag' -> global_app_name+':light_blocks'},
+                {'tag' -> global_app_name+':light_blocks'},
+                {'tag' -> global_app_name+':light_blocks'},
+                {'tag' -> global_app_name+':light_blocks'},
+                {'tag' -> global_app_name+':light_blocks'},
+                {'tag' -> global_app_name+':light_blocks'},
+                {'tag' -> global_app_name+':light_blocks'},
+                {'tag' -> global_app_name+':light_blocks'}
+            ],
+            'result' -> {
+                'item' -> 'minecraft:light',
+                'count' -> 8
+            }
+        } }
+    } }
+});
+
+__on_close()-> (
+    run('datapack disable "file/'+global_app_name+'.zip"')
+)
