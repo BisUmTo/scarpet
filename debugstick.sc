@@ -82,8 +82,9 @@ __on_player_right_clicks_block(player, item_tuple, hand, block, face, hitvec) ->
     )
 );
 
-create_datapack(system_info('app_name'), {
-    'data' -> { 'scarpet' -> { 'recipes' -> { str('%s.json', system_info('app_name')) -> {
+global_app_name = system_info('app_name');
+create_datapack(global_app_name, {
+    'data' -> { global_app_name -> { 'recipes' -> { 'debug_stick.json' -> {
         'type' -> 'crafting_shaped',
         'pattern' -> [
             ' N',
@@ -105,5 +106,5 @@ create_datapack(system_info('app_name'), {
 });
 
 __on_close()-> (
-    run('datapack disable "file/debug_stick.zip"')
+    run('datapack disable "file/'+global_app_name+'.zip"')
 )
