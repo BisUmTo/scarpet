@@ -26,7 +26,7 @@ __config() -> {
 
 global_possible_states = {};
 
-_give_debugstick() -> if(player() ~ 'permission_level' >= 2, spawn('item', player()~'pos', '{PickupDelay:0,Item:{id:"minecraft:debug_stick",Count:1b}}'););
+_give_debugstick() -> if(player() ~ 'permission_level' >= 2, spawn('item', player()~'pos', str('{PickupDelay:0,Owner:%s, Item:{id:"minecraft:debug_stick",Count:1b}}', player()~'nbt':'UUID')););
 
 _update_blacklist() -> (
     global_blacklist_states = read_file('states', 'json');
