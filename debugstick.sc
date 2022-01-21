@@ -19,13 +19,12 @@ __config() -> {
         'blacklistStates remove <stateToRemove>' -> _(stateToRemove) -> _remove_blacklisted_state(stateToRemove)
     },
     'arguments' -> {
-        'stateToAdd' -> {'type' -> 'term', 'suggester' -> _(args) -> (global_possible_states)},
+        'stateToAdd' -> {'type' -> 'term', 'suggester' -> _(args) -> (keys(global_possible_states))},
         'stateToRemove' -> {'type' -> 'term', 'suggester' -> _(args) -> (global_blacklist_states)}
     }
 };
 
-global_properties = read_file('data','json');
-global_possible_states = [];
+global_possible_states = {};
 
 _give_debugstick() -> if(player() ~ 'permission_level' >= 2, spawn('item', player()~'pos', '{PickupDelay:0,Item:{id:"minecraft:debug_stick",Count:1b}}'););
 
@@ -39,7 +38,7 @@ _update_blacklist() -> (
             delete(global_properties:block:'properties', _)
         );
     for(global_properties:block:'properties',
-        if(global_possible_states ~ _ == null, global_possible_states += _)
+        global_possible_states += _
     )
     );
 );
