@@ -12,17 +12,72 @@ __config() -> {
             'source' -> 'https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
             'target' -> 'data.json',
         }
-    ]
+    ],
+    'commands' -> {
+        '' -> _() -> _give_debugstick(),
+        'blacklistStates add <stateToAdd>' -> _(stateToAdd) -> _add_blacklisted_state(stateToAdd),
+        'blacklistStates remove <stateToRemove>' -> _(stateToRemove) -> _remove_blacklisted_state(stateToRemove)
+    },
+    'arguments' -> {
+        'stateToAdd' -> {'type' -> 'term', 'suggester' -> _(args) -> (keys(global_possible_states))},
+        'stateToRemove' -> {'type' -> 'term', 'suggester' -> _(args) -> (global_blacklist_states)}
+    }
 };
 
-global_properties = read_file('data','json');
-global_blacklist_states = ['waterlogged'];
+global_possible_states = {};
 
-for(global_properties,
+_give_debugstick() -> if(player() ~ 'permission_level' >= 2, spawn('item', player()~'pos', str('{PickupDelay:0,Owner:%s, Item:{id:"minecraft:debug_stick",Count:1b}}', player()~'nbt':'UUID')););
+
+_update_blacklist() -> (
+    global_blacklist_states = read_file('states', 'json');
+    global_properties = read_file('data','json');        
+
+    for(global_properties,
     block = _;
     for(global_blacklist_states,
-        delete(global_properties:block:'properties', _)
+            delete(global_properties:block:'properties', _)
+        );
+    for(global_properties:block:'properties',
+        global_possible_states += _
     )
+    );
+);
+
+_update_blacklist();
+
+_add_blacklisted_state(state) -> (
+    file = read_file('states', 'json');
+    if(!file, 
+        (
+        blacklist= [state];
+        write_file('states', 'json', blacklist);
+        print(player()~'command_name', str('State %s successfully added to the blacklist', state));
+        ),
+        if(file ~ state == null, 
+            (
+            file += state;
+            write_file('states', 'json', file);
+            print(player()~'command_name', str('State %s successfully added to the blacklist', state));
+            ),
+            (
+            print(player()~'command_name', str('State %s already exists in the blacklist', state)));
+            )
+    );
+    _update_blacklist();
+        
+);
+
+_remove_blacklisted_state(state) -> (
+    file = read_file('states', 'json');
+    if(file ~ state != null, 
+        (
+        delete(file, file ~ state);
+        write_file('states', 'json', file);
+        global_blacklist_states = read_file('states', 'json');
+        print(player()~'command_name', str('State %s succesfully removed from the blacklist', state));
+        )
+    );
+    _update_blacklist();
 );
 
 _cycle(list, current, inverse) -> (
@@ -66,6 +121,8 @@ __on_player_right_clicks_block(player, item_tuple, hand, block, face, hitvec) ->
         compound = nbt:'DebugProperty' || {};
         properties = global_properties:block_name:'properties';
         if(properties,
+            if(global_blacklist_states ~ (compound:block_name) != null, compound:block_name = keys(properties):0);
+            inventory_set(player, if(hand=='mainhand',player~'selected_slot',-1), item_tuple:1, item_tuple:0, encode_nbt(nbt));
             current_property = compound:block_name || keys(properties):0;
 
             block_state = block_state(block);
