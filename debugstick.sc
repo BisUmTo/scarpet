@@ -1,5 +1,5 @@
 //////
-// debug_stick by DukeEdivad05 & BisUmTo
+// debugstick by DukeEdivad05 & BisUmTo
 // Allows to use debug_stick in survival too
 // Left click to change selected property
 // Right click to cycle the states
