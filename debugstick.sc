@@ -44,7 +44,8 @@ _update_blacklist() -> (
 );
 
 if(list_files('.','json')~'data' == null,
-    print(format('br ['+system_info('app_name')+'.sc] ', 'r data.json', '^ Click here to download', '@'+global_source, 'r  file not found'))   
+    print(format('br ['+system_info('app_name')+'.sc] ', 'r data.json', '^ Click here to download', '@'+global_source, 'r  file not found'));
+    logger('error', str('Missing %s/scripts/%s.data/data.json file: Download it from %s', system_info('world_name'), system_info('app_name'), global_source))
 );
 _update_blacklist();
 
