@@ -16,6 +16,7 @@ create_datapack(global_app_name, {
     } } } } }
 });
 
+run('datapack enable "file/'+global_app_name+'.zip"');
 __on_close()-> (
     run('datapack disable "file/'+global_app_name+'.zip"')
 )
