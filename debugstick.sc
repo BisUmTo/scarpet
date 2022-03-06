@@ -9,7 +9,7 @@ __config() -> {
     'stay_loaded' -> true,
     'resources' -> [
         {
-            'source' -> 'https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
+            'source' -> source='https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
             'target' -> 'data.json',
         }
     ],
@@ -30,7 +30,7 @@ _give_debugstick() -> if(player() ~ 'permission_level' >= 2, spawn('item', playe
 
 _update_blacklist() -> (
     global_blacklist_states = read_file('states', 'json');
-    global_properties = read_file('data','json');        
+    global_properties = read_file('data','json');    
 
     for(global_properties,
     block = _;
@@ -43,6 +43,9 @@ _update_blacklist() -> (
     );
 );
 
+if(list_files('.','json')~'data' == null,
+    print(format('br ['+system_info('app_name')+'.sc] ', 'r data.json', '^ Click here to download', '@'+source, 'r  file not found'))   
+);
 _update_blacklist();
 
 _add_blacklisted_state(state) -> (
