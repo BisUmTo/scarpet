@@ -9,7 +9,7 @@ __config() -> {
     'stay_loaded' -> true,
     'resources' -> [
         {
-            'source' -> source='https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
+            'source' -> global_source='https://raw.githubusercontent.com/Arcensoth/mcdata/master/processed/reports/blocks/simplified/data.json',
             'target' -> 'data.json',
         }
     ],
@@ -44,7 +44,7 @@ _update_blacklist() -> (
 );
 
 if(list_files('.','json')~'data' == null,
-    print(format('br ['+system_info('app_name')+'.sc] ', 'r data.json', '^ Click here to download', '@'+source, 'r  file not found'))   
+    print(format('br ['+system_info('app_name')+'.sc] ', 'r data.json', '^ Click here to download', '@'+global_source, 'r  file not found'))   
 );
 _update_blacklist();
 
