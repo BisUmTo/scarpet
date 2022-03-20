@@ -10,7 +10,11 @@
 // Note: unload app while changing configs
 //////
 
-__config()->{};
+__config()->{
+    'requires' -> {
+        'carpet' -> '>=1.4.47'
+    }
+};
 
 // CONFIG
 global_config = {
