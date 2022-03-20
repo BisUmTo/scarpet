@@ -146,8 +146,10 @@ __open(shulker_slot) -> (
 );
 
 __on_player_uses_item(player, item, hand) ->(
-	if(hand != 'mainhand', return());
-    if(item:0 ~ 'shulker_box$' && player ~ ['trace',5,'blocks'] == null,
+if(hand != 'mainhand', return());
+    if(item:0 ~ 'shulker_box$' && 
+       player ~ ['trace',5,'blocks'] == null &&
+       item:1 == 1,
         __open(27+(player ~ 'selected_slot'+27)%36)
     )
 );
