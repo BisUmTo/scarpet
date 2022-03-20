@@ -6,7 +6,6 @@
 // From config it is possible to:
 // - Enable/disable from hand Shulker Box access
 // - Enable/disable Shulkerbox nesting
-// - [IN FUTURE] Enable/disable moving prevention (move currently opened Shulkerbox)
 //
 // Note: unload app while changing configs
 //////
@@ -50,7 +49,9 @@ __open(shulker_slot) -> (
         // OPEN ANOTHER SHULKER GUI
         if(data:'slot' >= 27 && action == 'clone', 
             sub_item_tuple = inventory_get(screen, data:'slot');
-            if(sub_item_tuple && sub_item_tuple:0 ~ 'shulker_box$',
+            if(sub_item_tuple && 
+               sub_item_tuple:0 ~ 'shulker_box$' &&
+               sub_item_tuple:1 == 1,
                 global_prvnt = true;
                 __open(data:'slot');
                 inventory_set(global_screen, -1, global_prvnt:1, global_prvnt:0, global_prvnt:2);
