@@ -10,6 +10,7 @@ __on_player_uses_item(player, item_tuple, hand)->(
     if(!nbt || !(pos = nbt:'LodestonePos'), return());
     dimension = nbt:'LodestoneDimension';
     pos = [pos:'X', pos:'Y', pos:'Z'];
+    modify(player,'swing',hand);
 
     in_dimension(dimension,
         pos_button = pos_offset(pos,'up');
