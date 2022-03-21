@@ -104,6 +104,6 @@ __on_player_uses_item(player, item, hand) ->(
 );
 
 __on_close() -> (
-    close_screen(global_screen);
+    if(global_screen,close_screen(global_screen));
     write_file('config', 'json', global_config);
 )
