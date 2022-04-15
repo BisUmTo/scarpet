@@ -71,7 +71,7 @@ global_categories = {
     'concrete_powder' -> {
         'ratio' -> 8, 
         'colors' -> default_colors,
-        'override' -> true,
+        'override' -> false,
         'item_category' -> 'building_blocks'
     },
     'coral' -> {
