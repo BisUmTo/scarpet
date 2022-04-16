@@ -108,10 +108,10 @@ if( !global_config:'stop',
 	run('title @a times 4 20 4');
 	run('playsound minecraft:entity.item.pickup ambient @a');
 
-    e = spawn('frog', pos, str('{CustomName:\'{"text":"%s","color":"%s"}\',Variant:%d}',
+    e = spawn('frog', pos, str('{CustomName:\'{"text":"%s","color":"%s"}\',variant:"%s"}',
         replace(replace(replace(actor,'\\\\',''),'"',''),'\\\'',''),
         color,
-		floor(rand(3))
+		rand(['minecraft:temperate','minecraft:warm','minecraft:cold'])
     ));
     _add_death_event(e)
 );
