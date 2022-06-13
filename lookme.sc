@@ -19,7 +19,20 @@ if(entities:0 == null,
             'execute as %s at @s run teleport @s ~ ~ ~ facing entity %s', 
             _ ~ 'command_name', 
             player() ~ 'command_name'
-        ))
+        ));
+
+        if(_ ~ 'nbt':'OnGround' == true,
+            aPos = pos(_) + [0,0.45,0];
+            filter(entity_list('armor_stand'),
+                if(_ ~ 'pos' == aPos,
+                    run(str(
+                        'execute as %s at @s run teleport @s ~ ~ ~ facing entity %s', 
+                        _ ~ 'command_name', 
+                        player() ~ 'command_name'
+                    ));
+                );
+            )
+        );
     );
     print(player(), str('Affected %d entit%s', i, if(i==1,'y','ies')));
 , // else
@@ -30,7 +43,20 @@ if(entities:0 == null,
                 'execute as %s at @s run teleport @s ~ ~ ~ facing entity %s', 
                 _ ~ 'command_name', 
                 player() ~ 'command_name'
-            ))
+            ));
+
+            if(_ ~ 'nbt':'OnGround' == true,
+                aPos = pos(_) + [0,0.45,0];
+                filter(entity_list('armor_stand'),
+                    if(_ ~ 'pos' == aPos,
+                        run(str(
+                            'execute as %s at @s run teleport @s ~ ~ ~ facing entity %s', 
+                            _ ~ 'command_name', 
+                            player() ~ 'command_name'
+                        ));
+                    );
+                )
+            );
         , // else
             j += 1
         )
