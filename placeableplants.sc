@@ -1,6 +1,6 @@
 __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
-global_placeable_items = {'allium', 'azure_bluet', 'bamboo', 'big_dripleaf', 'blue_orchid', 'cornflower', 'crimson_fungus', 'crimson_roots', 'dandelion', 'dead_bush', 'fern', 'grass', 'lily_of_the_valley', 'nether_sprouts', 'orange_tulip', 'oxeye_daisy', 'pink_tulip', 'poppy', 'red_tulip', 'sweet_berries', 'warped_fungus', 'warped_roots', 'white_tulip', 'wither_rose'};
+global_placeable_items = {'allium', 'azure_bluet', 'bamboo', 'big_dripleaf', 'blue_orchid', 'cornflower', 'crimson_fungus', 'crimson_roots', 'dandelion', 'dead_bush', 'fern', 'grass', 'lily_of_the_valley', 'nether_sprouts', 'orange_tulip', 'oxeye_daisy', 'pink_tulip', 'poppy', 'red_tulip', 'sweet_berries', 'warped_fungus', 'warped_roots', 'white_tulip', 'wither_rose', 'mangrove_propagule'};
 global_placeable_tall_items = {'large_fern', 'lilac', 'peony', 'rose_bush', 'sunflower', 'tall_grass'};
 
 // script run l=[];for(block_list(),set([x,y,z],'air');set([x,y-1,z],_);if(place_item('rail',[x,y,z]), l+=_));print(map(l,'\''+_+'\''))
