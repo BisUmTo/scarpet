@@ -1,7 +1,7 @@
 __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
 global_tall_plants = ['sunflower','lilac','rose_bush','peony','tall_grass','large_fern'];
-global_extra_plants = ['big_dripleaf', 'pitcher_crop'];
+global_extra_plants = ['big_dripleaf', 'pitcher_crop', 'pitcher_plant'];
 
 __on_player_right_clicks_block(player, item_tuple, hand, block, face, hitvec) -> (
     if(!item_tuple || (global_tall_plants~block==null && global_extra_plants~block==null) || player ~ 'gamemode' == 'spectator', return());
