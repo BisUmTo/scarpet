@@ -3,6 +3,9 @@
 // Right click on an item_frame/glow_item_frame with a shears to make it invisible
 // Richt click on an item_frame/glow_item_frame with a glass_pane to make it fixed
 // Right click on an item_frame/glow_item_frame with an axe to unfix it
+//
+// Known issues:
+// - Unbreaking enchantment is not supported
 //////
 
 __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
