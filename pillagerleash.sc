@@ -1,6 +1,6 @@
 //////
 // pillagerleash by BisUmTo
-// Right click on a pillager with a lead to leash it
+// Right click with a lead on a pillager without any item in its hands in to leash it
 //////
 
 global_leash_nbt = if(system_info('game_data_version') >= 3815, 'leash', 'Leash');
