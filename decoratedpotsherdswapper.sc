@@ -1,6 +1,6 @@
 //////
 // decoratedpotsherdswapper by BisUmTo
-// Allows players to swap decorated potsherds while placed
+// Allows players to swap decorated potsherds while placed, by shift right clicking with a sherd or brick
 //
 // Known issues:
 // - If sherd is present in both hands and mainhand has only one item, offhand will be used overwriting the mainhand sherd
