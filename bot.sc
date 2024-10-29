@@ -61,7 +61,7 @@ _spawn(time) -> (
         run(str('player %s kill', name));
         print(player, format(str('g Bot %s despawned', name)));
     ));
-    print(player(), format(str('g Bot %s spawned for %s ticks', name, time)));
+    print(player(), format(str('g Bot %s spawned for %s', name, stringify_time(time))));
 
 );
 
@@ -98,3 +98,13 @@ _kill_nearest() -> (
 );
 
 distance(pos1, pos2) -> sqrt((pos1:0 - pos2:0)^2 + (pos1:1 - pos2:1)^2 + (pos1:2 - pos2:2)^2);
+
+stringify_time(ticks) -> (
+    if(ticks < 20, str('%d ticks', ticks),
+       ticks < 1200, str('%.2f seconds', ticks / 20),
+       ticks < 72000, str('%.2f minutes', ticks / 1200),
+       ticks < 1728000, str('%.2f hours', ticks / 72000),
+    // else
+         str('%.2f days', ticks / 1728000)
+    )
+)
