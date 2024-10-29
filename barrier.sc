@@ -33,7 +33,6 @@ _break(player, pos, block_name, step, lvl) -> (
       modify(player, 'breaking_progress', null);
    ,
       modify(player, 'breaking_progress', lvl);
-      print(lvl);
       if (lvl >= 10, (
         destroy(pos, -1);
         item_tuple = inventory_get(player, player ~ 'selected_slot');
