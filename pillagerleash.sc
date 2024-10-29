@@ -1,3 +1,10 @@
+//////
+// pillagerleash by BisUmTo
+// Right click on a pillager with a lead to leash it
+//
+// Last update: 2024-10-29 for 1.21.1
+//////
+
 __config() -> {'stay_loaded' -> true, 'scope' -> 'global'};
 
 __on_player_interacts_with_entity(player, entity, hand) -> (
@@ -12,7 +19,7 @@ __on_player_interacts_with_entity(player, entity, hand) -> (
     ,
         hand = 'mainhand';
     );
-    if(parse_nbt(entity~'nbt'):'Leash':'UUID',return());
+    if(parse_nbt(entity~'nbt'):'leash':'UUID',return());
 
     __leash_to(player,entity);
 
@@ -25,5 +32,5 @@ __on_player_interacts_with_entity(player, entity, hand) -> (
 );
 
 __leash_to(player,entity) -> (
-    run(str('data modify entity %s Leash.UUID set from entity %s UUID',entity~'uuid',player~'uuid'));
+    run(str('data modify entity %s leash.UUID set from entity %s UUID',entity~'uuid',player~'uuid'));
 );
