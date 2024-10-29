@@ -74,7 +74,8 @@ _get_bot_name(player) -> (
 );
 
 _kill(name) -> (
-    if(!_get_online_bots()~name, return(print(player(), format('r Bot %s not found', name))));
+    bot = filter(_get_online_bots(), _~'command_name' == name);
+    if(!bot, return(print(player(), format(str('r Bot %s not found', name)))));
     run(str('player %s kill', name));
     print(player(), format(str('g Bot %s killed', name)));
 );
