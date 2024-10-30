@@ -39,8 +39,13 @@ _swap(player, block, index_face, item) -> (
     old_item = nbt:('sherds['+index_face+']');
     if (old_item ~ item, return(null));
     nbt:('sherds['+index_face+']') = item;
+    force_update = all(parse_nbt(nbt:'sherds'), _~'brick') && !inventory_has_items(block);
     without_updates(set(block, 'air'));
-    set(block, block, block_state(block), nbt);
+    if(force_update, 
+        schedule(0, _(outer(block)) -> set(block, 'decorated_pot', block_state(block))),
+    // else
+        set(block, 'decorated_pot', block_state(block), nbt);
+    );
     sound('block.decorated_pot.hit', pos(block), 1.0, 1.5, 'block');
     old_item
 );
