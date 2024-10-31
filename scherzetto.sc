@@ -188,7 +188,7 @@ _handle_zombie(e, new) -> (
         );
         sound('entity.allay.death', pos(entity), 1, 0.5, 'hostile');
         if(attacking_entity~'gamemode' != 'creative',
-            inventory_set(player, player~'selected_slot', count - 1, item, nbt);
+            inventory_set(attacking_entity, attacking_entity~'selected_slot', count - 1, item, nbt);
         );
     ));
     entity_event(e, 'on_tick', _(entity) -> (
