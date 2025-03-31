@@ -37,7 +37,7 @@ if(global_status && tick_time() % 20 == 0,
             x = px + dx;
             z = pz + dz;
             if (in_slime_chunk(x, py, z),
-                draw_shape('box', 21, {
+                draw_shape('box', 50, {
                     'from' -> [x, -64, z],
                     'to' -> [x+16, 448, z+16],
                     'fill' -> 0x00ff0033,
