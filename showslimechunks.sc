@@ -23,7 +23,7 @@ __config() -> {
   }
 };
 
-global_status = true;
+global_status = false;
 global_chunk_radius = 5;
 
 __on_tick() ->
