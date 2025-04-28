@@ -80,7 +80,7 @@ __make_grave(player, pos, items) -> (
         modify(_, 'gravity', false);
         modify(_, 'motion', [0,0,0]);
         modify(_, 'nbt_merge', '{Age:-32768}');
-        modify(_, 'mount', armor_stands:1);
+        modify(_, 'mount', display_entities:1);
         modify(_, 'tag', ['gb.grave_item', 'gb.grave']);
         scoreboard('gb.grave.time', _~'uuid', time)
     )
