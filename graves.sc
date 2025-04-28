@@ -20,7 +20,7 @@ __config() -> {
     }
 };
 
-_command() -> if((player=player())~'permission_level'>=1, _remove_grave(player, pos(player), null, true));
+_command() -> if((player=player())~'permission_level'>=1, __remove_grave(player, pos(player), null, true));
 _graves_list(player_name) -> (
     for(keys(uuid_storage = parse_nbt(nbt_storage('redcraft:players'))),
         if(lower(uuid_storage:_)==lower(player_name), player_uuid = _; break())
