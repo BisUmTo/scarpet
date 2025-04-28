@@ -45,8 +45,9 @@ _graves_list(player_name) -> (
         print(player(),format(str('ri No player found with name %s',player_name)))
     )
 );
-
-scoreboard_add('gb.grave.time');
+if(scoreboard('gb.grave.time') == null,
+    scoreboard_add('gb.grave.time')
+);
 
 __on_player_dies(player) -> (
     nbt = parse_nbt(nbt_storage('redcraft:players'));
@@ -56,22 +57,19 @@ __on_player_dies(player) -> (
     if(inventory_has_items(player),
         schedule(0, _(outer(player)) -> if(
             (items = filter(entity_area('item', (pos=pos(player)) + [0,player~'eye_height',0], [3, 3, 3]), _~'age'==0)) != [],
-            _make_grave(player, pos, items)
+            __make_grave(player, pos, items)
         ))
     )
 );
 
-_make_grave(player, pos, items) -> (
-    time = _save_grave_position(player);
-    armor_stands = [
-        spawn('armor_stand', pos+[0,-1.7,0.85],  '{ArmorItems:[{},{},{},{id:"minecraft:spruce_sign",Count:1b}],Invisible:true,DisabledSlots:2039583}'),
-        spawn('armor_stand', pos+[0,-1.7,0],     '{ArmorItems:[{},{},{},{id:"minecraft:coarse_dirt",Count:1b}],Invisible:true,DisabledSlots:2039583}'),
-        spawn('armor_stand', pos+[0,-1.7,0.625], '{ArmorItems:[{},{},{},{id:"minecraft:coarse_dirt",Count:1b}],Invisible:true,DisabledSlots:2039583}'),
-        spawn('armor_stand', pos+[0,-1.1,0.75],  '{ArmorItems:[{},{},{},{id:"minecraft:cobblestone_wall",Count:1b}],Rotation:[90f,0f],Invisible:true,DisabledSlots:2039583}')
+__make_grave(player, pos, items) -> (
+    time = __save_grave_position(player);
+    name = player~'name';
+    display_entities = [
+        a=spawn('block_display', pos, str('{Passengers: [{block_state: {Name: "minecraft:spruce_wall_sign", Properties: {facing: "north", waterlogged: "false"}}, id: "minecraft:block_display", transformation: {left_rotation: [0.0f, 1.0f, 0.0f, 0.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f], scale: [0.375f, 0.5f, 0.5f], translation: [0.1875f, 0.0625f, -0.25f]}}, {block_state: {Name: "minecraft:coarse_dirt"}, id: "minecraft:block_display", transformation: {left_rotation: [0.0f, 1.0f, 0.0f, 0.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f], scale: [0.5f, 0.5f, 0.5f], translation: [0.25f, -0.25f, -0.25f]}}, {block_state: {Name: "minecraft:cobbled_deepslate_wall", Properties: {east: "low", north: "none", south: "none", up: "true", waterlogged: "false", west: "low"}}, id: "minecraft:block_display", transformation: {left_rotation: [0.0f, 1.0f, 0.0f, 0.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f], scale: [0.5f, 0.5f, 0.5f], translation: [0.25f, 0.25f, -0.375f]}}, {alignment: "center", background: 0, default_background: 0b, id: "minecraft:text_display", line_width: 200, see_through: 0b, shadow: 0b, text: \'"%s"\', text_opacity: -1b, transformation: {left_rotation: [0.0f, 0.0f, 0.0f, 1.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f], scale: [0.25f, 0.25f, 1.0f], translation: [0.0f, 0.455416f, -0.48f]}}], block_state: {Name: "minecraft:coarse_dirt"}, transformation: {left_rotation: [0.0f, 1.0f, 0.0f, 0.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f], scale: [0.5f, 0.5f, 0.5f], translation: [0.25f, -0.25f, 0.25f]}}', name)),
+        ...(a~'passengers'),
     ];
-    for(armor_stands,
-        modify(_, 'invulnerable', true);
-        modify(_, 'gravity', false);
+    for(display_entities,
         modify(_, 'tag', ['gb.grave_armor_stand', 'gb.grave']);
         scoreboard('gb.grave.time', _~'uuid', time)
     );
@@ -88,7 +86,7 @@ _make_grave(player, pos, items) -> (
     )
 );
 
-_save_grave_position(player) -> (
+__save_grave_position(player) -> (
     nbt = parse_nbt(nbt_storage('redcraft:graves'));
     if(!has(nbt,player~'uuid'), nbt:(player~'uuid') = []);
     nbt:(player~'uuid') += {
@@ -99,7 +97,7 @@ _save_grave_position(player) -> (
     nbt_storage('redcraft:graves', encode_nbt(nbt));
     system_info('world_time')
 );
-_remove_grave_position(player,tick) -> (
+__remove_grave_position(player,tick) -> (
     nbt = parse_nbt(nbt_storage('redcraft:graves'));
     if(!has(nbt,player~'uuid'), return(false));
     for(nbt:(player~'uuid'),if(_:'Tick' == tick, i=_i; break()));
@@ -122,14 +120,17 @@ __on_player_starts_sneaking(player) -> (
 	for(_get_graves_positions(player),
 		grave = _;
 		if(player ~ 'dimension' == grave:'Dimension' && _distance(pos(player), grave:'Pos')<1,
-			_remove_grave(player, pos(player), grave:'Tick', false);
-            _remove_grave_position(player,grave:'Tick')
+			__remove_grave(player, pos(player), grave:'Tick', false);
+            __remove_grave_position(player,grave:'Tick')
 		)
 	)
 );
 
-_remove_grave(player, pos, tick, ignore_tick) -> (
-    for(filter(entity_area('armor_stand', pos, [1.5,1.5,1.5]), scoreboard('gb.grave.time', _~'uuid') == tick || ignore_tick),
+__remove_grave(player, pos, tick, ignore_tick) -> (
+    for(filter([
+            ...entity_area('block_display', pos, [1.5,1.5,1.5]),
+            ...entity_area('text_display', pos, [1.5,1.5,1.5])
+        ], scoreboard('gb.grave.time', _~'uuid') == tick || ignore_tick),
         modify(_, 'remove')
     );
     for(filter(entity_area('item', pos, [1,1,1]), scoreboard('gb.grave.time', _~'uuid') == tick || ignore_tick),
