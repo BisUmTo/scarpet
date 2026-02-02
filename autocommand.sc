@@ -13,6 +13,7 @@ __config() -> {
         '' -> _() -> _help(),
         'set <text_command>' -> _(txt) -> _set(),
         'get' -> _() -> _get()
+    },
     'arguments' -> {
         'text_command' -> {
             'type' -> 'text'
