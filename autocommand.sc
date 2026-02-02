@@ -25,7 +25,7 @@ global_command = '';
 _get() -> (
     if(global_command != '', 
         print(player(), format('b Command curently running:'));
-        print(player(), format(str('ig   %s', global command)))
+        print(player(), format(str('ig   %s', global_command)))
     , //else
         print(player(), format('b No command setted'));
     )
@@ -43,7 +43,7 @@ _set(txt) -> (
 );
 
 __on_player_connects(player) -> (
-    if (query(player, 'player_type') != 'fake,
+    if (query(player, 'player_type') != 'fake',
         run(global_command);
     );
 );
