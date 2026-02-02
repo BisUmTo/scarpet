@@ -1,6 +1,6 @@
 //////
 // autocommand script by BisUmTo
-// adds /bot command:
+// adds /autocommand command:
 // /autocommand -> Shows help
 // /autocommand get -> Shows current command
 // /autocommand set <command> -> Sets command to autorun when a player joins
